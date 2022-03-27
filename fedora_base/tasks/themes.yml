@@ -1,18 +1,26 @@
 ---
+- name: Clone git repos
+  ansible.builtin.git:
+    repo: "{{ item.value.repo }}"
+    dest: "{{ item.value.destination }}"
+    depth: "{{ item.value.depth | default(omit) }}"
+  loop: "{{ lookup('dict', base_git_repos) }}"
+  async: 700
+  poll: 0
 
 - name: Copy wallpaper
-  shell: cp "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/backgrounds/truchet-d.jpg" "{{ lookup('env', 'HOME') }}/.local/share/backgrounds/truchet-d.jpg"
+  shell: cp "/home/{{ ansible_user }}/Pictures/Wallpapers/backgrounds/truchet-d.jpg" "/home/{{ ansible_user }}/.local/share/backgrounds/truchet-d.jpg"
 
 - name: Set wallpaper permission
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/.local/share/backgrounds/*"
+    path: "/home/{{ ansible_user }}/.local/share/backgrounds/*"
     mode: u=rw,g=r,o=r
     recurse: true
 
 - name: Set wallpaper
   dconf:
     key: "/org/gnome/desktop/background/picture-uri-dark"
-    value: "'file://{{ lookup('env', 'HOME') }}/.local/share/backgrounds/truchet-d.jpg'"
+    value: "'file:///home/{{ ansible_user }}/.local/share/backgrounds/truchet-d.jpg'"
 
 - name: Download, extract and install theme
   block:
@@ -25,7 +33,7 @@
     ansible.builtin.unarchive:
       remote_src: True
       src: "/tmp/DraculaSur-gtk-theme-master.zip"
-      dest: "{{ lookup('env', 'HOME') }}/.themes/DraculaSur-gtk-theme"
+      dest: "/home/{{ ansible_user }}/.themes/DraculaSur-gtk-theme"
 
   - name: Cleanup
     ansible.builtin.file:
@@ -34,13 +42,13 @@
 
   - name: Make fonts directory
     ansible.builtin.file:
-      path: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+      path: "/home/{{ ansible_user }}/.local/share/fonts/"
       state: directory
 
   - name: Collect fonts
     get_url:
       url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
-      dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+      dest: "/home/{{ ansible_user }}/.local/share/fonts/"
 
 
 - name: Set the theme
