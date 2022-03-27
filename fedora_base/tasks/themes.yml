@@ -9,7 +9,10 @@
   poll: 0
 
 - name: Copy wallpaper
-  shell: cp "/home/{{ ansible_user }}/Pictures/Wallpapers/backgrounds/truchet-d.jpg" "/home/{{ ansible_user }}/.local/share/backgrounds/truchet-d.jpg"
+  ansible.builtin.copy:
+    remote_src: true
+    src: "/home/{{ ansible_user }}/Pictures/Wallpapers/backgrounds/truchet-d.jpg"
+    dest: "/home/{{ ansible_user }}/.local/share/backgrounds/truchet-d.jpg"
 
 - name: Set wallpaper permission
   ansible.builtin.file:
