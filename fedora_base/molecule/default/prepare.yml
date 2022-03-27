@@ -1,0 +1,30 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+
+    - name: Create fedora user
+      ansible.builtin.user:
+          name: james18
+          shell: /bin/bash
+          groups: wheel
+
+    - name: Create fake backgrounds
+      ansible.builtin.file:
+          path: "/home/root/Pictures/Wallpapers/backgrounds/"
+          state: directory
+          recurse: true
+      
+    - name: Create fake jpg
+      ansible.builtin.file:
+          path: "/home/root/Pictures/Wallpapers/backgrounds/truchet-d.jpg"
+          state: touch
+
+    - name: Create fake .local dirs
+      ansible.builtin.file:
+          path: "{{ item }}"
+          state: directory
+          recurse: true
+      loop: 
+          - "/home/root/.themes/DraculaSur-gtk-theme"
+          - "/home/root/.local/share/backgrounds"

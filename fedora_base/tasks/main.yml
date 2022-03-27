@@ -3,17 +3,20 @@
 #
 - name: Install base RPMs
   ansible.builtin.dnf:
-    name: "{{ base_rpms }}"
+    name: "{{ item }}"
     state: present
   become: true
   register: dnf_result
+  loop:
+    - "{{ base_rpms }}"
+    - "{{ base_rpms_extra }}"
 
 - name: Output DNF result
   debug:
     msg: "{{ dnf_result }}"
 
 - name: Render configs
-  include: configs.yml
+  include_tasks: configs.yml
 
 - name: Setup theme stuff
-  include: themes.yml
+  include_tasks: themes.yml

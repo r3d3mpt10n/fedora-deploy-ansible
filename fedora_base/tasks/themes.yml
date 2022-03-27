@@ -5,14 +5,14 @@
     dest: "{{ item.value.destination }}"
     depth: "{{ item.value.depth | default(omit) }}"
   loop: "{{ lookup('dict', base_git_repos) }}"
-  async: 700
-  poll: 0
+  async: "{{ ansible_check_mode | ternary(0, 700) }}"
+  poll: "{{ ansible_check_mode | ternary(0, 10) }}"
 
 - name: Copy wallpaper
   ansible.builtin.copy:
     remote_src: true
-    src: "/home/{{ ansible_user }}/{{ base_pics_dir }}/truchet-d.jpg"
-    dest: "/home/{{ ansible_user }}/.local/share/backgrounds/truchet-d.jpg"
+    src: "/home/{{ ansible_user }}/{{ base_pics_dir }}/{{ base_wp }}"
+    dest: "/home/{{ ansible_user }}/{{ gnome_wp_dir }}/{{ base_wp }}"
 
 - name: Set wallpaper permission
   ansible.builtin.file:
@@ -25,7 +25,13 @@
     key: "/org/gnome/desktop/background/picture-uri-dark"
     value: "'file:///home/{{ ansible_user }}/{{ gnome_wp_dir }}/truchet-d.jpg'"
 
+- name: Check if theme dir already exists
+  ansible.builtin.stat:
+    path: "/home/{{ ansible_user }}/.themes/DraculaSur-gtk-theme"
+  register: theme_dir_exists
+
 - name: Download, extract and install theme
+  when: theme_dir_exists.stat.exists == false
   block:
     - name: Download theme
       get_url:
@@ -44,16 +50,15 @@
         path: "/tmp/DraculaSur-gtk-theme-master.zip"
         state: absent
 
-    - name: Make fonts directory
-      ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.local/share/fonts/"
-        state: directory
+- name: Make fonts directory
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.local/share/fonts/"
+    state: directory
 
-    - name: Collect fonts
-      get_url:
-        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
-        dest: "/home/{{ ansible_user }}/.local/share/fonts/"
-
+- name: Collect fonts
+  get_url:
+    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
+    dest: "/home/{{ ansible_user }}/.local/share/fonts/"
 
 - name: Set the theme
   dconf:

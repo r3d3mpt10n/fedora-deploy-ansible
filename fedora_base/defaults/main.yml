@@ -1,6 +1,10 @@
 ---
 # defaults file for base
 base_rpms:
+  - python3-psutil
+  - dbus
+  - dbus-daemon
+base_rpms_extra:
   - vim
   - zsh
   - tmux
@@ -46,3 +50,4 @@ base_gnome_settings:
   toolkit-accessibility: false
 base_pics_dir: "Pictures/Wallpapers/backgrounds"
 gnome_wp_dir: ".local/share/backgrounds"
+base_wp: "truchet-d.jpg"
