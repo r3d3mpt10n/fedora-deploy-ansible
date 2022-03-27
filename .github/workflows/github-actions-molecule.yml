@@ -3,16 +3,16 @@ name: Molecule Test
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: fedora-latest
+    runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.8, 3.9]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
         with:
-          path: molecule_demo
+          path: fedora_base
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
