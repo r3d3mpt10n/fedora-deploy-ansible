@@ -28,11 +28,12 @@
     get_url:
       url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
       dest: /tmp/
+    register: theme_get_result
 
   - name: Extract it
     ansible.builtin.unarchive:
       remote_src: True
-      src: "/tmp/DraculaSur-gtk-theme-master.zip"
+      src: "{{ theme_get_result.dest }}"
       dest: "/home/{{ ansible_user }}/.themes/DraculaSur-gtk-theme"
 
   - name: Cleanup
