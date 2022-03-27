@@ -44,3 +44,5 @@ base_gnome_settings:
   monospace-font-name: 'Hack Nerd Font Mono Bold 10'
   toolbar-style: 'text'
   toolkit-accessibility: false
+base_pics_dir: "Pictures/Wallpapers/backgrounds"
+gnome_wp_dir: ".local/share/backgrounds"
