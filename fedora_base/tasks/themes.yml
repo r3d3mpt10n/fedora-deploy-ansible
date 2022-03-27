@@ -1,0 +1,50 @@
+---
+
+- name: Copy wallpaper
+  shell: cp "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/backgrounds/truchet-d.jpg" "{{ lookup('env', 'HOME') }}/.local/share/backgrounds/truchet-d.jpg"
+
+- name: Set wallpaper permission
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.local/share/backgrounds/*"
+    mode: u=rw,g=r,o=r
+    recurse: true
+
+- name: Set wallpaper
+  dconf:
+    key: "/org/gnome/desktop/background/picture-uri-dark"
+    value: "'file://{{ lookup('env', 'HOME') }}/.local/share/backgrounds/truchet-d.jpg'"
+
+- name: Download, extract and install theme
+  block:
+  - name: Download theme
+    get_url:
+      url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
+      dest: /tmp/
+
+  - name: Extract it
+    ansible.builtin.unarchive:
+      remote_src: True
+      src: "/tmp/DraculaSur-gtk-theme-master.zip"
+      dest: "{{ lookup('env', 'HOME') }}/.themes/DraculaSur-gtk-theme"
+
+  - name: Cleanup
+    ansible.builtin.file:
+      path: "/tmp/DraculaSur-gtk-theme-master.zip"
+      state: absent
+
+  - name: Make fonts directory
+    ansible.builtin.file:
+      path: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+      state: directory
+
+  - name: Collect fonts
+    get_url:
+      url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
+      dest: "{{ lookup('env', 'HOME') }}/.local/share/fonts/"
+
+
+- name: Set the theme
+  dconf:
+    key: "/org/gnome/desktop/interface/{{ item.key }}"
+    value: "'{{ item.value }}'"
+  loop: "{{ base_gnome_settings | dict2items }}"

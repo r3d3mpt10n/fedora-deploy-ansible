@@ -1,0 +1,20 @@
+---
+# tasks file for base
+#
+- name: Install base RPMs
+  ansible.builtin.dnf:
+    name: "{{ base_rpms }}"
+    state: present
+  become: true
+  register: dnf_result
+
+- name: Output DNF result
+  debug:
+    msg: "{{ dnf_result }}"
+
+- name: Render configs
+  include: configs.yml
+
+- name: Setup theme stuff
+  include: themes.yml
+  

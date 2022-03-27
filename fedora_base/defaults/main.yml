@@ -1,0 +1,43 @@
+---
+# defaults file for base
+base_rpms:
+  - vim
+  - zsh
+  - tmux
+  - zsh-autosuggestions
+  - zsh-syntax-highlighting
+  - vim-powerline
+  - breeze-cursor-theme
+base_managed_configs:
+  vimrc:
+    name: vimrc
+    template: vimrc.j2
+    destination: "/home/bshephar/.vimrc"
+  zshrc:
+    name: zshrc
+    template: zshrc.j2
+    destination: "/home/bshephar/.zshrc"
+base_git_repos:
+  wallpapers:
+    name: wallpapers
+    repo: https://gitlab.gnome.org/GNOME/gnome-backgrounds.git
+    destination: "/home/bshephar/Pictures/Wallpapers/"
+  p10k:
+    name: p10k
+    repo: https://github.com/romkatv/powerlevel10k.git
+    destination: "/home/bshephar/Documents/Code/p10k"
+    depth: 1
+base_gnome_settings:
+  color-scheme: 'prefer-dark'
+  cursor-size: 24
+  cursor-theme: 'Breeze_Snow'
+  enable-animations: true
+  font-antialiasing: 'grayscale'
+  font-hinting: 'slight'
+  font-name: 'Overpass,  10'
+  gtk-im-module: 'gtk-im-context-simple'
+  gtk-theme: 'DraculaSur-gtk-theme'
+  icon-theme: 'Papirus'
+  monospace-font-name: 'Hack Nerd Font Mono Bold 10'
+  toolbar-style: 'text'
+  toolkit-accessibility: false
