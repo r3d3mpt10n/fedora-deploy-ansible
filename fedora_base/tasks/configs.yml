@@ -4,4 +4,5 @@
   ansible.builtin.template:
     src: "{{ item.value.template }}"
     dest: "{{ item.value.destination }}"
+    mode: u=rw,g=r,o=r
   loop: "{{ lookup( 'dict', base_managed_configs) }}"

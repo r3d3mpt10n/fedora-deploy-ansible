@@ -1,5 +1,5 @@
 ---
-- name: Clone git repos
+- name: Clone git repos  # noqa git-latest
   ansible.builtin.git:
     repo: "{{ item.value.repo }}"
     dest: "{{ item.value.destination }}"
@@ -13,6 +13,7 @@
     remote_src: true
     src: "/home/{{ ansible_user }}/{{ base_pics_dir }}/{{ base_wp }}"
     dest: "/home/{{ ansible_user }}/{{ gnome_wp_dir }}/{{ base_wp }}"
+    mode: u=rw,g=r,o=r
 
 - name: Set wallpaper permission
   ansible.builtin.file:
@@ -55,15 +56,16 @@
   block:
     - name: Make fonts directory
       ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.local/share/fonts/"
+        path: "/home/{{ ansible_user }}/"
         state: directory
-    
+        mode: u=rw,g=rw,o=r
+
     - name: Collect fonts
       ansible.builtin.get_url:
         url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
         dest: "/home/{{ ansible_user }}/.local/share/fonts/"
       register: fonts_get_result
-    
+
     - name: Extract fonts
       ansible.builtin.unarchive:
         remote_src: true
