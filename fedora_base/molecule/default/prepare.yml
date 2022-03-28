@@ -11,13 +11,13 @@
 
     - name: Create fake backgrounds
       ansible.builtin.file:
-          path: "/home/root/Pictures/Wallpapers/backgrounds/"
+          path: "/home/root/Pictures/Wallpapers/gnome-wp/backgrounds/"
           state: directory
           recurse: true
-      
+
     - name: Create fake jpg
       ansible.builtin.file:
-          path: "/home/root/Pictures/Wallpapers/backgrounds/truchet-d.jpg"
+          path: "/home/root/Pictures/Wallpapers/gnome-wp/backgrounds/truchet-d.jpg"
           state: touch
 
     - name: Create fake .local dirs
@@ -25,6 +25,6 @@
           path: "{{ item }}"
           state: directory
           recurse: true
-      loop: 
+      loop:
           - "/home/root/.themes/DraculaSur-gtk-theme"
           - "/home/root/.local/share/backgrounds"

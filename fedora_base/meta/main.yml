@@ -2,6 +2,8 @@ galaxy_info:
   author: Brendan Shephard
   description: Role for configuring new Fedora installs
   company: Red Hat
+  role_name: fedora_base
+  namespace: brendan_shephard
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
