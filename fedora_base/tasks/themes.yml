@@ -38,6 +38,7 @@
       ansible.builtin.get_url:
         url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
         dest: /tmp/
+        mode: u=rw,g=r,o=r
       register: theme_get_result
 
     - name: Extract it
@@ -64,6 +65,7 @@
       ansible.builtin.get_url:
         url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
         dest: "/home/{{ ansible_user }}/.local/share/fonts/"
+        mode: u=rw,g=r,o=r
       register: fonts_get_result
 
     - name: Extract fonts
