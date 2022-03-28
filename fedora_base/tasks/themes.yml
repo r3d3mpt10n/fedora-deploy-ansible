@@ -21,7 +21,7 @@
     recurse: true
 
 - name: Set wallpaper
-  dconf:
+  community.general.dconf:
     key: "/org/gnome/desktop/background/picture-uri-dark"
     value: "'file:///home/{{ ansible_user }}/{{ gnome_wp_dir }}/truchet-d.jpg'"
 
@@ -34,7 +34,7 @@
   when: theme_dir_exists.stat.exists == false
   block:
     - name: Download theme
-      get_url:
+      ansible.builtin.get_url:
         url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
         dest: /tmp/
       register: theme_get_result
@@ -50,18 +50,28 @@
         path: "/tmp/DraculaSur-gtk-theme-master.zip"
         state: absent
 
-- name: Make fonts directory
-  ansible.builtin.file:
-    path: "/home/{{ ansible_user }}/.local/share/fonts/"
-    state: directory
-
-- name: Collect fonts
-  get_url:
-    url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
-    dest: "/home/{{ ansible_user }}/.local/share/fonts/"
+- name: Configure fonts
+  tags: notest
+  block:
+    - name: Make fonts directory
+      ansible.builtin.file:
+        path: "/home/{{ ansible_user }}/.local/share/fonts/"
+        state: directory
+    
+    - name: Collect fonts
+      ansible.builtin.get_url:
+        url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
+        dest: "/home/{{ ansible_user }}/.local/share/fonts/"
+      register: fonts_get_result
+    
+    - name: Extract fonts
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: "{{ fonts_get_result.dest }}"
+        dest: "/home/{{ ansible_user }}/.local/share/fonts/"
 
 - name: Set the theme
-  dconf:
+  community.general.dconf:
     key: "/org/gnome/desktop/interface/{{ item.key }}"
     value: "'{{ item.value }}'"
   loop: "{{ base_gnome_settings | dict2items }}"

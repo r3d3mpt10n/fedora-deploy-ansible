@@ -11,10 +11,6 @@
     - "{{ base_rpms }}"
     - "{{ base_rpms_extra }}"
 
-- name: Output DNF result
-  debug:
-    msg: "{{ dnf_result }}"
-
 - name: Render configs
   include_tasks: configs.yml
 

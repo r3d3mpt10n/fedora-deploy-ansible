@@ -1,7 +1,7 @@
 ---
 
 - name: Render Configs
-  template:
+  ansible.builtin.template:
     src: "{{ item.value.template }}"
     dest: "{{ item.value.destination }}"
   loop: "{{ lookup( 'dict', base_managed_configs) }}"
