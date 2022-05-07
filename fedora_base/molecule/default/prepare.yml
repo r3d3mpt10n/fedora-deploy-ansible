@@ -9,17 +9,6 @@
           shell: /bin/bash
           groups: wheel
 
-    - name: Create fake backgrounds
-      ansible.builtin.file:
-          path: "/home/root/Pictures/Wallpapers/gnome-wp/backgrounds/"
-          state: directory
-          recurse: true
-
-    - name: Create fake jpg
-      ansible.builtin.file:
-          path: "/home/root/Pictures/Wallpapers/gnome-wp/backgrounds/truchet-d.jpg"
-          state: touch
-
     - name: Create fake .local dirs
       ansible.builtin.file:
           path: "{{ item }}"
@@ -27,4 +16,3 @@
           recurse: true
       loop:
           - "/home/root/.themes/DraculaSur-gtk-theme"
-          - "/home/root/.local/share/backgrounds"

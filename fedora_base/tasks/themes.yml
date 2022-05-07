@@ -8,23 +8,11 @@
   async: "{{ ansible_check_mode | ternary(0, 700) }}"
   poll: "{{ ansible_check_mode | ternary(0, 10) }}"
 
-- name: Copy wallpaper
-  ansible.builtin.copy:
-    remote_src: true
-    src: "/home/{{ ansible_user }}/{{ base_pics_dir }}/{{ base_wp }}"
-    dest: "/home/{{ ansible_user }}/{{ gnome_wp_dir }}/{{ base_wp }}"
-    mode: u=rw,g=r,o=r
-
-- name: Set wallpaper permission
-  ansible.builtin.file:
-    path: "/home/{{ ansible_user }}/.local/share/backgrounds/*"
-    mode: u=rw,g=r,o=r
-    recurse: true
 
 - name: Set wallpaper
   community.general.dconf:
     key: "/org/gnome/desktop/background/picture-uri-dark"
-    value: "'file:///home/{{ ansible_user }}/{{ gnome_wp_dir }}/truchet-d.jpg'"
+    value: "'{{ gnome_wp_dir }}/{{ base_wp }}'"
 
 - name: Check if theme dir already exists
   ansible.builtin.stat:
@@ -38,14 +26,14 @@
       ansible.builtin.get_url:
         url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
         dest: /tmp/
-        mode: u=rw,g=r,o=r
+        mode: u=rwx,g=rwx,o=r
       register: theme_get_result
 
     - name: Extract it
       ansible.builtin.unarchive:
         remote_src: true
         src: "{{ theme_get_result.dest }}"
-        dest: "/home/{{ ansible_user }}/.themes/DraculaSur-gtk-theme"
+        dest: "/home/{{ ansible_user }}/.themes/"
 
     - name: Cleanup
       ansible.builtin.file:
@@ -57,15 +45,15 @@
   block:
     - name: Make fonts directory
       ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/"
+        path: "/home/{{ ansible_user }}/.local/share/fonts"
         state: directory
-        mode: u=rw,g=rw,o=r
+        mode: u=rwx,g=rwx,o=r
 
     - name: Collect fonts
       ansible.builtin.get_url:
         url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
         dest: "/home/{{ ansible_user }}/.local/share/fonts/"
-        mode: u=rw,g=r,o=r
+        mode: u=rwx,g=rw,o=r
       register: fonts_get_result
 
     - name: Extract fonts

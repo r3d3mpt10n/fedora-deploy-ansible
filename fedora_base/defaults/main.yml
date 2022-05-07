@@ -25,11 +25,6 @@ base_managed_configs:
     template: zshrc.j2
     destination: "/home/{{ ansible_user }}/.zshrc"
 base_git_repos:
-  wallpapers:
-    name: wallpapers
-    repo: https://gitlab.gnome.org/GNOME/gnome-backgrounds.git
-    destination: "/home/{{ ansible_user }}/Pictures/Wallpapers/gnome-wp"
-    depth: 1
   p10k:
     name: p10k
     repo: https://github.com/romkatv/powerlevel10k.git
@@ -49,6 +44,6 @@ base_gnome_settings:
   monospace-font-name: 'Hack Nerd Font Mono Bold 10'
   toolbar-style: 'text'
   toolkit-accessibility: false
-base_pics_dir: "Pictures/Wallpapers/gnome-wp/backgrounds"
-gnome_wp_dir: ".local/share/backgrounds"
+base_pics_dir: "/usr/share/backgrounds/"
+gnome_wp_dir: "/usr/share/backgrounds/gnome"
 base_wp: "truchet-d.jpg"

@@ -46,4 +46,3 @@ base_gnome_settings:
   toolbar-style: 'text'
   toolkit-accessibility: false
 base_theme_url: "https://github.com/Aryan20/DraculaSur-gtk-theme/archive/master.zip"
-  
