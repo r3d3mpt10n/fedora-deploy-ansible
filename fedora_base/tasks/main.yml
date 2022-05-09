@@ -14,5 +14,5 @@
 - name: Render configs
   include_tasks: configs.yml
 
-- name: Setup theme stuff
+- name: Setup theme tasks
   include_tasks: themes.yml

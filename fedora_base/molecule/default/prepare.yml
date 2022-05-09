@@ -1,13 +1,20 @@
 ---
 - hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
 
     - name: Create fedora user
       ansible.builtin.user:
           name: james18
+          password: "{{ 'test' | password_hash('sha512') }}"
           shell: /bin/bash
           groups: wheel
+    
+    - name: No pass sudo
+      ansible.builtin.lineinfile:
+          path: /etc/sudoers
+          state: present
+          line: "james18 ALL=(root) NOPASSWD:ALL"
 
     - name: Create fake .local dirs
       ansible.builtin.file:
@@ -15,4 +22,5 @@
           state: directory
           recurse: true
       loop:
-          - "/home/root/.themes/DraculaSur-gtk-theme"
+          - "{{ ansible_env.HOME }}/.themes/DraculaSur-gtk-theme"
+          - "{{ ansible_env.HOME }}/.config"

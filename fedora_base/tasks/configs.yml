@@ -1,5 +1,4 @@
 ---
-
 - name: Render Configs
   ansible.builtin.template:
     src: "{{ item.value.template }}"

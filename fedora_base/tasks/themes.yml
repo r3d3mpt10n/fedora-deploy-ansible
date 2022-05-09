@@ -4,10 +4,9 @@
     repo: "{{ item.value.repo }}"
     dest: "{{ item.value.destination }}"
     depth: "{{ item.value.depth | default(omit) }}"
-  loop: "{{ lookup('dict', base_git_repos) }}"
+  loop: "{{ lookup('dict', base_git_repos, wantlist=True) }}"
   async: "{{ ansible_check_mode | ternary(0, 700) }}"
   poll: "{{ ansible_check_mode | ternary(0, 10) }}"
-
 
 - name: Set wallpaper
   community.general.dconf:
@@ -16,11 +15,25 @@
 
 - name: Check if theme dir already exists
   ansible.builtin.stat:
-    path: "/home/{{ ansible_user }}/.themes/DraculaSur-gtk-theme"
+    path: "{{ ansible_env.HOME }}/.themes/"
+  register: theme_base_dir_exists
+
+- name: Check if theme dir already exists
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.themes/DraculaSur-gtk-theme"
   register: theme_dir_exists
 
+- name: Create dir if it doesn't exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.themes"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rwx,g=rwx,o=r
+  when: not theme_base_dir_exists.stat.exists
+
 - name: Download, extract and install theme
-  when: theme_dir_exists.stat.exists == false
+  when: not theme_dir_exists.stat.exists
   block:
     - name: Download theme
       ansible.builtin.get_url:
@@ -33,7 +46,7 @@
       ansible.builtin.unarchive:
         remote_src: true
         src: "{{ theme_get_result.dest }}"
-        dest: "/home/{{ ansible_user }}/.themes/"
+        dest: "{{ ansible_env.HOME }}/.themes/"
 
     - name: Cleanup
       ansible.builtin.file:
@@ -45,14 +58,14 @@
   block:
     - name: Make fonts directory
       ansible.builtin.file:
-        path: "/home/{{ ansible_user }}/.local/share/fonts"
+        path: "{{ ansible_env.HOME }}/.local/share/fonts"
         state: directory
         mode: u=rwx,g=rwx,o=r
 
     - name: Collect fonts
       ansible.builtin.get_url:
         url: "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip"
-        dest: "/home/{{ ansible_user }}/.local/share/fonts/"
+        dest: "{{ ansible_env.HOME }}/.local/share/fonts/"
         mode: u=rwx,g=rw,o=r
       register: fonts_get_result
 
@@ -60,7 +73,13 @@
       ansible.builtin.unarchive:
         remote_src: true
         src: "{{ fonts_get_result.dest }}"
-        dest: "/home/{{ ansible_user }}/.local/share/fonts/"
+        dest: "{{ ansible_env.HOME }}/.local/share/fonts/"
+
+- name: Set terminal theme  # noqa no-changed-when
+  ansible.builtin.shell: >
+       set -o pipefail && \
+       cat {{ ansible_env.HOME }}/.config/terminal.preferences | dconf load /org/gnome/terminal/legacy/profiles:/
+  tags: notest
 
 - name: Set the theme
   community.general.dconf:

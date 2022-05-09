@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: 172.20.12.91
   gather_facts: true
   roles:
     - role: fedora_base

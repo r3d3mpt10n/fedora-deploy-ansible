@@ -15,20 +15,21 @@ base_rpms_extra:
   - papirus-icon-theme
   - overpass-fonts
   - overpass-mono-fonts
+  - gnome-tweaks
 base_managed_configs:
   vimrc:
     name: vimrc
     template: vimrc.j2
-    destination: "/home/{{ ansible_user }}/.vimrc"
+    destination: "{{ ansible_env.HOME }}/.vimrc"
   zshrc:
     name: zshrc
     template: zshrc.j2
-    destination: "/home/{{ ansible_user }}/.zshrc"
+    destination: "{{ ansible_env.HOME }}/.zshrc"
 base_git_repos:
   p10k:
     name: p10k
     repo: https://github.com/romkatv/powerlevel10k.git
-    destination: "/home/{{ ansible_user }}/Documents/Code/p10k"
+    destination: "{{ ansible_env.HOME }}/Documents/Code/p10k"
     depth: 1
 base_gnome_settings:
   color-scheme: 'prefer-dark'
@@ -39,7 +40,7 @@ base_gnome_settings:
   font-hinting: 'slight'
   font-name: 'Overpass,  10'
   gtk-im-module: 'gtk-im-context-simple'
-  gtk-theme: 'DraculaSur-gtk-theme'
+  gtk-theme: 'DraculaSur-gtk-theme-master'
   icon-theme: 'Papirus'
   monospace-font-name: 'Hack Nerd Font Mono Bold 10'
   toolbar-style: 'text'

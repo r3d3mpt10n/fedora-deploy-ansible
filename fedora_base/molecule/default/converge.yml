@@ -1,30 +1,34 @@
 ---
 - name: Converge
   hosts: all
+  gather_facts: True
   tasks:
     - name: "Run it"
       include_role:
         name: "fedora_base"
       vars:
-         base_rpms: ['git', 'python3-psutil', 'dconf', 'dbus-daemon']
+         base_rpms: ['git', 'python3-psutil', 'dconf', 'dbus-daemon', 'tar', 'unzip']
          base_rpms_extra: []
-         ansible_user: root
          ansible_remote_tmp: /tmp
          base_managed_configs:
            vimrc:
              name: vimrc
              template: vimrc.j2
-             destination: "/{{ ansible_user }}/.vimrc"
+             destination: "{{ ansible_env.HOME }}/.vimrc"
            zshrc:
              name: zshrc
              template: zshrc.j2
-             destination: "/{{ ansible_user }}/.zshrc"
+             destination: "{{ ansible_env.HOME }}/.zshrc"
+           terminal:
+             name: terminal
+             template: terminal.j2
+             destination: "{{ ansible_env.HOME }}/.config/terminal.preferences"
          base_git_repos:
              test_repo:
                  name: This repo
                  repo: "https://github.com/r3d3mpt10n/fedora-deploy-ansible.git"
-                 destination: "/{{ ansible_user }}/this-repo"
+                 destination: "{{ ansible_env.HOME }}/this-repo"
              theme:
                  name: "gtk-theme"
                  repo: "https://github.com/Aryan20/DraculaSur-gtk-theme.git"
-                 destination: "/{{ ansible_user }}/gtk-theme"
+                 destination: "{{ ansible_env.HOME }}/gtk-theme"

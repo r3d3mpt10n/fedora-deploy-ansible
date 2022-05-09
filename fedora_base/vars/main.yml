@@ -1,35 +1,23 @@
 ---
 # vars file for base
-base_rpms:
-  - vim
-  - zsh
-  - tmux
-  - zsh-autosuggestions
-  - zsh-syntax-highlighting
-  - vim-powerline
-  - breeze-cursor-theme
-  - papirus-icon-theme
-  - overpass-fonts
-  - overpass-mono-fonts
-  - python3-psutil
 base_managed_configs:
   vimrc:
     name: vimrc
     template: vimrc.j2
-    destination: "/home/{{ ansible_user }}/.vimrc"
+    destination: "{{ ansible_env.HOME }}/.vimrc"
   zshrc:
     name: zshrc
     template: zshrc.j2
-    destination: "/home/{{ ansible_user }}/.zshrc"
+    destination: "{{ ansible_env.HOME }}/.zshrc"
+  terminal:
+    name: terminal
+    template: terminal.j2
+    destination: "{{ ansible_env.HOME }}/.config/terminal.preferences"
 base_git_repos:
-  wallpapers:
-    name: wallpapers
-    repo: https://gitlab.gnome.org/GNOME/gnome-backgrounds.git
-    destination: "/home/{{ ansible_user }}/Pictures/Wallpapers/backgrounds"
   p10k:
     name: p10k
     repo: https://github.com/romkatv/powerlevel10k.git
-    destination: "/home/{{ ansible_user }}/Documents/Code/p10k"
+    destination: "{{ ansible_env.HOME }}/Documents/Code/p10k"
     depth: 1
 base_gnome_settings:
   color-scheme: 'prefer-dark'
@@ -40,7 +28,7 @@ base_gnome_settings:
   font-hinting: 'slight'
   font-name: 'Overpass,  10'
   gtk-im-module: 'gtk-im-context-simple'
-  gtk-theme: 'DraculaSur-gtk-theme'
+  gtk-theme: 'DraculaSur-gtk-theme-master'
   icon-theme: 'Papirus'
   monospace-font-name: 'Hack Nerd Font Mono Bold 10'
   toolbar-style: 'text'
